@@ -15,9 +15,19 @@ import { Separator } from "@/components/ui/separator"
 import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/context/auth-context"
 import { Loader2, User, Bell, Shield, LogOut } from "lucide-react"
+import ImageUpload from "@/components/image-upload"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 export default function ProfilePage() {
-  const { user, logout, isLoading: authLoading } = useAuth()
+  const { user, logout, isLoading: authLoading, updateUserProfile } = useAuth()
   const router = useRouter()
   const { toast } = useToast()
   const [isLoading, setIsLoading] = useState(false)
@@ -26,6 +36,8 @@ export default function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false)
+  const [profilePhoto, setProfilePhoto] = useState<string>("")
 
   // Notificações
   const [emailNotifications, setEmailNotifications] = useState(true)
@@ -42,6 +54,7 @@ export default function ProfilePage() {
     if (user) {
       setName(user.name || "")
       setEmail(user.email || "")
+      setProfilePhoto(user.profilePhoto || "")
     }
   }, [user, authLoading, router])
 
@@ -51,6 +64,14 @@ export default function ProfilePage() {
 
     // Simulando atualização de perfil
     setTimeout(() => {
+      if (updateUserProfile) {
+        updateUserProfile({
+          name,
+          email,
+          profilePhoto,
+        })
+      }
+
       toast({
         title: "Perfil atualizado",
         description: "Suas informações foram atualizadas com sucesso.",
@@ -100,6 +121,24 @@ export default function ProfilePage() {
     }, 1000)
   }
 
+  const handleProfilePhotoChange = (imageData: string) => {
+    setProfilePhoto(imageData)
+    setIsPhotoDialogOpen(false)
+
+    // Atualizar o perfil com a nova foto
+    if (updateUserProfile) {
+      updateUserProfile({
+        ...user,
+        profilePhoto: imageData,
+      })
+
+      toast({
+        title: "Foto atualizada",
+        description: "Sua foto de perfil foi atualizada com sucesso.",
+      })
+    }
+  }
+
   if (authLoading) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">
@@ -113,19 +152,40 @@ export default function ProfilePage() {
       <div className="flex flex-col md:flex-row gap-8 mb-8">
         <div className="flex flex-col items-center">
           <Avatar className="h-32 w-32 mb-4">
-            <AvatarImage src="/placeholder.svg?height=128&width=128" alt={name} />
-            <AvatarFallback className="text-3xl bg-emerald-100 text-emerald-800">
-              {name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()
-                .substring(0, 2)}
-            </AvatarFallback>
+            {profilePhoto ? (
+              <AvatarImage src={profilePhoto || "/placeholder.svg"} alt={name} />
+            ) : (
+              <AvatarFallback className="text-3xl bg-emerald-100 text-emerald-800">
+                {name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")
+                  .toUpperCase()
+                  .substring(0, 2)}
+              </AvatarFallback>
+            )}
           </Avatar>
-          <Button variant="outline" size="sm">
-            Alterar foto
-          </Button>
+          <Dialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                Alterar foto
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Alterar foto de perfil</DialogTitle>
+                <DialogDescription>Faça upload de uma nova foto para seu perfil.</DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <ImageUpload onImageSelect={handleProfilePhotoChange} currentImage={profilePhoto} />
+              </div>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsPhotoDialogOpen(false)}>
+                  Cancelar
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex-1">
           <h1 className="text-3xl font-bold mb-2">{name || "Seu perfil"}</h1>

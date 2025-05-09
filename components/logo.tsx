@@ -26,10 +26,11 @@ export function Logo({ size = "md", animated = true }: LogoProps) {
   }
 
   const iconVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
+    hidden: { scale: 0.8, opacity: 0, rotate: -10 },
     visible: {
       scale: 1,
       opacity: 1,
+      rotate: 0,
       transition: {
         type: "spring",
         stiffness: 260,
@@ -54,15 +55,25 @@ export function Logo({ size = "md", animated = true }: LogoProps) {
   }
 
   const plusVariants = {
-    hidden: { scale: 0, opacity: 0 },
+    hidden: { scale: 0, opacity: 0, rotate: -45 },
     visible: {
       scale: 1,
       opacity: 1,
+      rotate: 0,
       transition: {
         type: "spring",
         stiffness: 260,
         damping: 20,
         delay: 0.3,
+      },
+    },
+    hover: {
+      scale: 1.2,
+      rotate: 90,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 10,
       },
     },
   }
@@ -80,12 +91,13 @@ export function Logo({ size = "md", animated = true }: LogoProps) {
   }
 
   return (
-    <Link href="/" className="flex items-center">
+    <Link href="/" className="flex items-center group">
       <div className="flex items-center">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={iconVariants}
+          whileHover={{ scale: 1.1, transition: { duration: 0.2 } }}
           className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-600 dark:bg-emerald-500 mr-2"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -102,15 +114,16 @@ export function Logo({ size = "md", animated = true }: LogoProps) {
           initial="hidden"
           animate="visible"
           variants={textVariants}
-          className={`font-bold ${sizeClasses[size]} text-emerald-600 dark:text-emerald-400`}
+          className={`font-bold ${sizeClasses[size]} text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors`}
         >
           Planeja
         </motion.span>
         <motion.span
           initial="hidden"
           animate="visible"
+          whileHover="hover"
           variants={plusVariants}
-          className={`font-bold ${sizeClasses[size]} text-emerald-600 dark:text-emerald-400`}
+          className={`font-bold ${sizeClasses[size]} text-emerald-600 dark:text-emerald-400 group-hover:text-emerald-700 dark:group-hover:text-emerald-300 transition-colors`}
         >
           +
         </motion.span>

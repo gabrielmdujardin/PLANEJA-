@@ -13,12 +13,15 @@ interface Item {
   name: string
   price: number
   assignedTo: Person[] | null
+  image?: string | null
 }
 
+// Atualizar a interface Guest para incluir o campo phone
 interface Guest {
   id: string
   name: string
   email: string
+  phone: string
   status: "confirmed" | "pending" | "declined"
 }
 
@@ -76,38 +79,61 @@ export const useEventStore = create<EventStore>()(
               name: "Carne (5kg)",
               price: 150,
               assignedTo: [{ id: "p1", name: "João" }],
+              image: null,
             },
             {
               id: "2",
               name: "Carvão",
               price: 25,
               assignedTo: [{ id: "p2", name: "Maria" }],
+              image: null,
             },
             {
               id: "3",
               name: "Bebidas",
               price: 120,
               assignedTo: null,
+              image: null,
             },
             {
               id: "4",
               name: "Pão de alho",
               price: 30,
               assignedTo: [{ id: "p3", name: "Pedro" }],
+              image: null,
             },
             {
               id: "5",
               name: "Descartáveis",
               price: 45,
               assignedTo: null,
+              image: null,
             },
           ],
           guests: [
-            { id: "1", name: "João Silva", status: "confirmed", email: "joao@example.com" },
-            { id: "2", name: "Maria Oliveira", status: "confirmed", email: "maria@example.com" },
-            { id: "3", name: "Pedro Santos", status: "confirmed", email: "pedro@example.com" },
-            { id: "4", name: "Ana Costa", status: "pending", email: "ana@example.com" },
-            { id: "5", name: "Lucas Ferreira", status: "declined", email: "lucas@example.com" },
+            { id: "1", name: "João Silva", status: "confirmed", email: "joao@example.com", phone: "(11) 98765-4321" },
+            {
+              id: "2",
+              name: "Maria Oliveira",
+              status: "confirmed",
+              email: "maria@example.com",
+              phone: "(11) 91234-5678",
+            },
+            {
+              id: "3",
+              name: "Pedro Santos",
+              status: "confirmed",
+              email: "pedro@example.com",
+              phone: "(11) 99876-5432",
+            },
+            { id: "4", name: "Ana Costa", status: "pending", email: "ana@example.com", phone: "(11) 95555-4444" },
+            {
+              id: "5",
+              name: "Lucas Ferreira",
+              status: "declined",
+              email: "lucas@example.com",
+              phone: "(11) 93333-2222",
+            },
           ],
         },
         {
@@ -123,9 +149,15 @@ export const useEventStore = create<EventStore>()(
           totalGuests: 20,
           items: [],
           guests: [
-            { id: "1", name: "João Silva", status: "confirmed", email: "joao@example.com" },
-            { id: "2", name: "Pedro Santos", status: "confirmed", email: "pedro@example.com" },
-            { id: "3", name: "Ana Costa", status: "pending", email: "ana@example.com" },
+            { id: "1", name: "João Silva", status: "confirmed", email: "joao@example.com", phone: "(11) 98765-4321" },
+            {
+              id: "2",
+              name: "Pedro Santos",
+              status: "confirmed",
+              email: "pedro@example.com",
+              phone: "(11) 99876-5432",
+            },
+            { id: "3", name: "Ana Costa", status: "pending", email: "ana@example.com", phone: "(11) 95555-4444" },
           ],
         },
       ],

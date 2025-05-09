@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
 import { useEventStore } from "@/stores/event-store"
+import ImageUpload from "@/components/image-upload"
 
 interface AddItemDialogProps {
   open: boolean
@@ -24,6 +25,7 @@ interface AddItemDialogProps {
 export default function AddItemDialog({ open, onOpenChange, eventId }: AddItemDialogProps) {
   const [itemName, setItemName] = useState("")
   const [itemPrice, setItemPrice] = useState("")
+  const [itemImage, setItemImage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { toast } = useToast()
@@ -58,6 +60,7 @@ export default function AddItemDialog({ open, onOpenChange, eventId }: AddItemDi
         name: itemName,
         price,
         assignedTo: null,
+        image: itemImage || null,
       }
 
       addItem(eventId, newItem)
@@ -65,6 +68,7 @@ export default function AddItemDialog({ open, onOpenChange, eventId }: AddItemDi
       // Limpar formulário
       setItemName("")
       setItemPrice("")
+      setItemImage("")
       onOpenChange(false)
 
       toast({
@@ -107,6 +111,13 @@ export default function AddItemDialog({ open, onOpenChange, eventId }: AddItemDi
               value={itemPrice}
               onChange={(e) => setItemPrice(e.target.value)}
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Foto do item (opcional)</Label>
+            <ImageUpload onImageSelect={setItemImage} currentImage={itemImage} />
+            <p className="text-xs text-gray-500 mt-1">
+              Adicione uma foto do item comprado para compartilhar com os participantes
+            </p>
           </div>
         </div>
         <DialogFooter>

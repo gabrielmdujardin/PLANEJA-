@@ -14,11 +14,17 @@ import { useEventStore } from "@/stores/event-store"
 import { useRouter } from "next/navigation"
 import AddItemDialog from "@/components/add-item-dialog"
 import AddGuestDialog from "@/components/add-guest-dialog"
+import EditEventDialog from "@/components/edit-event-dialog"
+
+// Adicionar importações para os novos componentes
+import EmailPreview from "@/components/email-preview"
+import SmsPreview from "@/components/sms-preview"
 
 export default function EventPage({ params }: { params: { id: string } }) {
   const [isLoading, setIsLoading] = useState(true)
   const [isAddItemOpen, setIsAddItemOpen] = useState(false)
   const [isAddGuestOpen, setIsAddGuestOpen] = useState(false)
+  const [isEditEventOpen, setIsEditEventOpen] = useState(false)
   const { toast } = useToast()
   const router = useRouter()
 
@@ -62,10 +68,7 @@ export default function EventPage({ params }: { params: { id: string } }) {
   }
 
   const handleEditEvent = () => {
-    toast({
-      title: "Editar evento",
-      description: "Funcionalidade de edição será implementada em breve.",
-    })
+    setIsEditEventOpen(true)
   }
 
   if (isLoading || !event) {
@@ -261,6 +264,23 @@ export default function EventPage({ params }: { params: { id: string } }) {
             </CardHeader>
             <CardContent>
               <GuestList guests={event.guests || []} eventId={event.id} />
+              <div className="flex flex-wrap gap-2 mt-4">
+                <EmailPreview
+                  eventId={event.id}
+                  guestId={event.guests?.[0]?.id || "example"}
+                  eventTitle={event.title}
+                  guestName={event.guests?.[0]?.name || "Convidado Exemplo"}
+                  eventDate={event.date}
+                  eventTime={event.time}
+                  eventLocation={event.location}
+                />
+                <SmsPreview
+                  eventId={event.id}
+                  guestId={event.guests?.[0]?.id || "example"}
+                  eventTitle={event.title}
+                  guestName={event.guests?.[0]?.name || "Convidado Exemplo"}
+                />
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -271,6 +291,9 @@ export default function EventPage({ params }: { params: { id: string } }) {
 
       {/* Diálogo para adicionar convidado */}
       <AddGuestDialog open={isAddGuestOpen} onOpenChange={setIsAddGuestOpen} eventId={event.id} />
+
+      {/* Diálogo para editar evento */}
+      <EditEventDialog open={isEditEventOpen} onOpenChange={setIsEditEventOpen} eventId={event.id} />
     </div>
   )
 }

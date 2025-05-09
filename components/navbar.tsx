@@ -16,11 +16,16 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { AccessibilityMenu } from "@/components/accessibility-menu"
 import { Logo } from "@/components/logo"
 import { motion, AnimatePresence } from "framer-motion"
+import { usePathname } from "next/navigation"
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const { user, logout } = useAuth()
+  const pathname = usePathname()
+
+  // Verificar se estamos na página inicial
+  const isHomePage = pathname === "/"
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -45,7 +50,11 @@ export default function Navbar() {
   return (
     <nav
       className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm" : "bg-white dark:bg-gray-900"
+        scrolled || !isHomePage
+          ? "bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm"
+          : isHomePage
+            ? "bg-transparent"
+            : "bg-white dark:bg-gray-900"
       }`}
       aria-label="Navegação principal"
     >

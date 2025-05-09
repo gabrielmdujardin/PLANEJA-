@@ -3,13 +3,14 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { MoreHorizontal, Trash2, Edit, User, Users } from "lucide-react"
+import { MoreHorizontal, Trash2, Edit, User, Users, ImageIcon } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { useToast } from "@/hooks/use-toast"
 import { useEventStore } from "@/stores/event-store"
 import { useState } from "react"
 import EditItemDialog from "@/components/edit-item-dialog"
 import AssignPersonDialog from "@/components/assign-person-dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface Person {
   id: string
@@ -21,6 +22,7 @@ interface Item {
   name: string
   price: number
   assignedTo: Person[] | null
+  image?: string | null
 }
 
 interface ItemsListProps {
@@ -35,6 +37,8 @@ export default function ItemsList({ items, eventId }: ItemsListProps) {
   const [assigningItem, setAssigningItem] = useState<Item | null>(null)
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false)
   const [isAssignDialogOpen, setIsAssignDialogOpen] = useState(false)
+  const [viewingImage, setViewingImage] = useState<string | null>(null)
+  const [isImageDialogOpen, setIsImageDialogOpen] = useState(false)
 
   const handleEditItem = (item: Item) => {
     setEditingItem(item)
@@ -54,6 +58,11 @@ export default function ItemsList({ items, eventId }: ItemsListProps) {
     })
   }
 
+  const handleViewImage = (imageUrl: string) => {
+    setViewingImage(imageUrl)
+    setIsImageDialogOpen(true)
+  }
+
   if (items.length === 0) {
     return (
       <div className="text-center py-8">
@@ -71,6 +80,7 @@ export default function ItemsList({ items, eventId }: ItemsListProps) {
             <TableHead>Item</TableHead>
             <TableHead>Valor</TableHead>
             <TableHead>Responsável(is)</TableHead>
+            <TableHead>Foto</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -97,6 +107,20 @@ export default function ItemsList({ items, eventId }: ItemsListProps) {
                   >
                     <User className="h-3.5 w-3.5 mr-1" /> Atribuir
                   </Button>
+                )}
+              </TableCell>
+              <TableCell>
+                {item.image ? (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-blue-500 h-7 px-2"
+                    onClick={() => handleViewImage(item.image as string)}
+                  >
+                    <ImageIcon className="h-3.5 w-3.5 mr-1" /> Ver foto
+                  </Button>
+                ) : (
+                  <span className="text-gray-400 text-sm">Sem foto</span>
                 )}
               </TableCell>
               <TableCell className="text-right">
@@ -135,6 +159,24 @@ export default function ItemsList({ items, eventId }: ItemsListProps) {
         item={assigningItem}
         eventId={eventId}
       />
+
+      {/* Diálogo para visualizar imagem */}
+      <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Foto do item</DialogTitle>
+          </DialogHeader>
+          <div className="flex justify-center">
+            {viewingImage && (
+              <img
+                src={viewingImage || "/placeholder.svg"}
+                alt="Foto do item"
+                className="max-h-[60vh] object-contain rounded-md"
+              />
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

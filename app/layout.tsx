@@ -8,6 +8,7 @@ import { AuthProvider } from "@/context/auth-context"
 import { Toaster } from "@/components/toaster"
 import { WelcomeAnimation } from "@/components/welcome-animation"
 import { AnimatedGradientBackground } from "@/components/animated-gradient-background"
+import { LogoAnimation } from "@/components/logo-animation"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -28,6 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+            <LogoAnimation />
             <a href="#main-content" className="skip-to-content">
               Pular para o conteúdo
             </a>

@@ -2,21 +2,15 @@
 
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CalendarDays, Users, CreditCard, CheckCircle, ArrowRight } from "lucide-react"
 import { motion } from "framer-motion"
-import { AnimatedCard } from "@/components/animated-card"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
+import { Logo } from "@/components/logo"
+import { CalendarDays, Users, CreditCard, CheckCircle, ArrowRight } from "lucide-react"
 
 export default function Home() {
   const featuresRef = useRef(null)
   const featuresInView = useInView(featuresRef, { once: true, amount: 0.2 })
-
-  const eventTypesRef = useRef(null)
-  const eventTypesInView = useInView(eventTypesRef, { once: true, amount: 0.2 })
-
-  const ctaRef = useRef(null)
-  const ctaInView = useInView(ctaRef, { once: true, amount: 0.5 })
 
   // Variantes para animações
   const containerVariants = {
@@ -44,8 +38,8 @@ export default function Home() {
 
   return (
     <div className="flex min-h-screen flex-col">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-950 dark:to-gray-900 py-20">
+      {/* Hero Section - Tela de Apresentação */}
+      <section className="min-h-[90vh] flex items-center bg-gradient-to-b from-emerald-50 to-white dark:from-emerald-950 dark:to-gray-900 py-20">
         <div className="container mx-auto px-4 text-center">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -53,6 +47,10 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="max-w-3xl mx-auto"
           >
+            <div className="mb-8 flex justify-center">
+              <Logo size="lg" animated={true} />
+            </div>
+
             <h1 className="text-4xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
               Organize seus eventos com{" "}
               <span className="text-emerald-600 dark:text-emerald-400 relative">
@@ -65,12 +63,14 @@ export default function Home() {
                 />
               </span>
             </h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-8">
+
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12">
               Planeje festas, churrascos e encontros sem complicação. Divida tarefas, gerencie convidados e organize
               despesas em um só lugar.
             </p>
+
             <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+              className="flex flex-col sm:flex-row gap-4 justify-center mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -78,23 +78,47 @@ export default function Home() {
               <Link href="/register">
                 <Button
                   size="lg"
-                  className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600"
+                  className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 text-lg px-8"
                 >
-                  Começar agora <ArrowRight className="ml-2 h-4 w-4" />
+                  Cadastre-se grátis <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/about">
-                <Button size="lg" variant="outline">
-                  Saiba mais
+              <Link href="/login">
+                <Button size="lg" variant="outline" className="text-lg px-8">
+                  Fazer login
                 </Button>
               </Link>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.8, duration: 0.6 }}
+              className="flex justify-center"
+            >
+              <a
+                href="#features"
+                className="flex flex-col items-center text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                aria-label="Rolar para recursos"
+              >
+                <span className="text-sm mb-2">Saiba mais</span>
+                <motion.div
+                  animate={{ y: [0, 10, 0] }}
+                  transition={{ repeat: Number.POSITIVE_INFINITY, duration: 1.5 }}
+                  className="w-8 h-8 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600"
+                >
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7.5 12L0.5 5L1.55 3.95L7.5 9.9L13.45 3.95L14.5 5L7.5 12Z" fill="currentColor" />
+                  </svg>
+                </motion.div>
+              </a>
             </motion.div>
           </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20" ref={featuresRef}>
+      <section id="features" className="py-20" ref={featuresRef}>
         <div className="container mx-auto px-4">
           <motion.h2
             className="text-3xl md:text-4xl font-bold text-center mb-12"
@@ -166,114 +190,39 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Event Types Section */}
-      <section className="py-20 bg-gray-50 dark:bg-gray-900" ref={eventTypesRef}>
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={eventTypesInView ? { opacity: 1 } : { opacity: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">Para qualquer tipo de evento</h2>
-            <p className="text-xl text-gray-600 dark:text-gray-300 text-center max-w-3xl mx-auto mb-12">
-              Seja uma pequena reunião ou uma grande celebração, o Planeja+ é perfeito para qualquer ocasião.
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <AnimatedCard delay={0.1} className="h-full">
-              <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
-                <div className="h-48 bg-emerald-100 dark:bg-emerald-900 flex items-center justify-center">
-                  <img
-                    src="/placeholder.svg?height=192&width=384"
-                    alt="Churrasco"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">Churrascos</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Organize churrascos perfeitos dividindo itens e custos entre os convidados.
-                  </p>
-                  <Link href="/register">
-                    <Button variant="outline" className="w-full">
-                      Começar a planejar
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedCard>
-
-            <AnimatedCard delay={0.2} className="h-full">
-              <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
-                <div className="h-48 bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                  <img
-                    src="/placeholder.svg?height=192&width=384"
-                    alt="Aniversários"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">Aniversários</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Planeje festas de aniversário inesquecíveis com todos os detalhes organizados.
-                  </p>
-                  <Link href="/register">
-                    <Button variant="outline" className="w-full">
-                      Começar a planejar
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedCard>
-
-            <AnimatedCard delay={0.3} className="h-full">
-              <div className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow h-full">
-                <div className="h-48 bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                  <img
-                    src="/placeholder.svg?height=192&width=384"
-                    alt="Encontros"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">Encontros</h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    Reúna amigos e familiares com facilidade para momentos especiais.
-                  </p>
-                  <Link href="/register">
-                    <Button variant="outline" className="w-full">
-                      Começar a planejar
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </AnimatedCard>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="py-20 bg-emerald-600 dark:bg-emerald-800 text-white" ref={ctaRef}>
+      <section className="py-20 bg-emerald-600 dark:bg-emerald-800 text-white">
         <motion.div
           className="container mx-auto px-4 text-center"
           initial={{ opacity: 0, y: 20 }}
-          animate={ctaInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
           transition={{ duration: 0.8 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Comece a planejar hoje mesmo</h2>
           <p className="text-xl text-emerald-100 max-w-3xl mx-auto mb-8">
             Junte-se a milhares de pessoas que já estão organizando eventos incríveis com o Planeja+.
           </p>
-          <Link href="/register">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="bg-white text-emerald-600 hover:bg-gray-100 dark:hover:bg-gray-200"
-            >
-              Criar conta gratuita
-            </Button>
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/register">
+              <Button
+                size="lg"
+                variant="secondary"
+                className="bg-white text-emerald-600 hover:bg-gray-100 dark:hover:bg-gray-200"
+              >
+                Criar conta gratuita
+              </Button>
+            </Link>
+            <Link href="/login">
+              <Button
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-emerald-700 dark:hover:bg-emerald-700"
+              >
+                Já tenho uma conta
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </section>
 

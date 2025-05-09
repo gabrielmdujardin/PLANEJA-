@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog"
 import { useToast } from "@/hooks/use-toast"
 import { useEventStore } from "@/stores/event-store"
+import ImageUpload from "@/components/image-upload"
 
 interface Person {
   id: string
@@ -25,6 +26,7 @@ interface Item {
   name: string
   price: number
   assignedTo: Person[] | null
+  image?: string | null
 }
 
 interface EditItemDialogProps {
@@ -37,6 +39,7 @@ interface EditItemDialogProps {
 export default function EditItemDialog({ open, onOpenChange, item, eventId }: EditItemDialogProps) {
   const [itemName, setItemName] = useState("")
   const [itemPrice, setItemPrice] = useState("")
+  const [itemImage, setItemImage] = useState<string>("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { toast } = useToast()
@@ -47,6 +50,7 @@ export default function EditItemDialog({ open, onOpenChange, item, eventId }: Ed
     if (item && open) {
       setItemName(item.name)
       setItemPrice(item.price.toString())
+      setItemImage(item.image || "")
     }
   }, [item, open])
 
@@ -80,6 +84,7 @@ export default function EditItemDialog({ open, onOpenChange, item, eventId }: Ed
         ...item,
         name: itemName,
         price,
+        image: itemImage,
       }
 
       updateItem(eventId, item.id, updatedItem)
@@ -125,6 +130,13 @@ export default function EditItemDialog({ open, onOpenChange, item, eventId }: Ed
               value={itemPrice}
               onChange={(e) => setItemPrice(e.target.value)}
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Foto do item (opcional)</Label>
+            <ImageUpload onImageSelect={setItemImage} currentImage={itemImage} />
+            <p className="text-xs text-gray-500 mt-1">
+              Adicione uma foto do item comprado para compartilhar com os participantes
+            </p>
           </div>
         </div>
         <DialogFooter>
